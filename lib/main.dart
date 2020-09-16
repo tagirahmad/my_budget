@@ -11,18 +11,27 @@ import 'bloc/money_movement_item_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Future<bool> databaseExists(String path) =>
-  //     databaseFactory.databaseExists(path);
+  Future<bool> databaseExists(String path) =>
+      databaseFactory.databaseExists(path);
 
-  final Future<Database> database = openDatabase(
-    join(await getDatabasesPath(), 'money_movement.db'),
-    onCreate: (db, version) {
-      return db.execute(
-        "CREATE TABLE moneyMovementItems(id INTEGER PRIMARY KEY AUTOINCREMENT, dateTime TEXT, moneyCount REAL, text TEXT)",
-      );
-    },
-    version: 1,
-  );
+  String path = join(await getDatabasesPath(), 'money_movement.db');
+  // String path = await getDatabasesPath();
+  bool dbExists = await databaseExists(path);
+  Future<Database> database;
+
+  if (dbExists == true) {
+    database = openDatabase(path);
+  } else if (dbExists == false) {
+    database = openDatabase(
+      join(await getDatabasesPath(), 'money_movement.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE moneyMovementItems(id INTEGER PRIMARY KEY AUTOINCREMENT, dateTime TEXT, moneyCount REAL, text TEXT)",
+        );
+      },
+      version: 1,
+    );
+  }
 
   MoneyMovementItemLocalRepository moneyMovementItemLocalRepository =
       MoneyMovementItemLocalRepository();

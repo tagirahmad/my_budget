@@ -60,10 +60,11 @@ class MoneyMovementItemBloc
       //   join(await getDatabasesPath(), 'money_movement.db'),
       // );
 
-      final Database db = await database;
+      // final Database db = await database;
 
       List<MoneyMovementItem> moneyMovementItems =
-          await moneyMovementItemLocalRepository.getMoneyMovementItem(db);
+          await moneyMovementItemLocalRepository
+              .getMoneyMovementItem(await database);
 
       yield MoneyMovementItemLoadingSuccess(
           moneyMovementItems: moneyMovementItems);
@@ -77,10 +78,10 @@ class MoneyMovementItemBloc
     // final Future<Database> database = openDatabase(
     //   join(await getDatabasesPath(), 'money_movement.db'),
     // );
-    final Database db = await database;
+    // final Database db = await database;
 
     moneyMovementItemLocalRepository.createMoneyMovementItem(
-        moneyMovementItem, db);
+        moneyMovementItem, await database);
   }
 
   Stream<MoneyMovementItemState> _editMoneyMovementItem(
@@ -91,10 +92,10 @@ class MoneyMovementItemBloc
       // final Future<Database> database = openDatabase(
       //   join(await getDatabasesPath(), 'money_movement.db'),
       // );
-      final Database db = await database;
+      // final Database db = await database;
 
       moneyMovementItemLocalRepository.editMoneyMovementItem(
-          moneyMovementItem, db);
+          moneyMovementItem, await database);
 
       yield MoneyMovementItemEditSuccess();
     } catch (e) {
@@ -109,9 +110,10 @@ class MoneyMovementItemBloc
       // final Future<Database> database = openDatabase(
       //   join(await getDatabasesPath(), 'money_movement.db'),
       // );
-      final Database db = await database;
+      // final Database db = await database;
 
-      moneyMovementItemLocalRepository.deleteMoneyMovementItem(db, id);
+      moneyMovementItemLocalRepository.deleteMoneyMovementItem(
+          await database, id);
 
       yield MoneyMovementItemDeleteSuccess();
     } catch (e) {
